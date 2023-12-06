@@ -2,7 +2,9 @@ package com.nike.mobileapppttpocnew.service;
 
 import com.eatthepath.pushy.apns.ApnsClient;
 import com.eatthepath.pushy.apns.ApnsClientBuilder;
+import com.eatthepath.pushy.apns.DeliveryPriority;
 import com.eatthepath.pushy.apns.PushNotificationResponse;
+import com.eatthepath.pushy.apns.PushType;
 import com.eatthepath.pushy.apns.util.ApnsPayloadBuilder;
 import com.eatthepath.pushy.apns.util.SimpleApnsPayloadBuilder;
 import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification;
@@ -25,6 +27,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -121,8 +124,8 @@ public class PTTService {
     List<UserChannel> allByChannelId = userChannelRepository.findAllByChannelId(channelUuid);
 
     for (UserChannel userChannel : allByChannelId) {
-      SimpleApnsPushNotification pushNotification = new SimpleApnsPushNotification(userChannel.getPttToken(),
-          "com.nike.pushToTalk.voip-ptt", notifPayload);
+      SimpleApnsPushNotification pushNotification = new SimpleApnsPushNotification(TokenUtil.sanitizeTokenString(userChannel.getPttToken()),
+          "com.nike.pushToTalk.voip-ptt", notifPayload, Instant.now(), DeliveryPriority.IMMEDIATE, PushType.PUSH_TO_TALK);
       service.sendNotification(pushNotification);
     }
 
