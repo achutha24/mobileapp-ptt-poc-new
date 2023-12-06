@@ -167,7 +167,7 @@ public class PTTService {
             pushNotificationResponse.getRejectionReason());
 
         pushNotificationResponse.getTokenInvalidationTimestamp().ifPresent(timestamp -> {
-          System.out.println("\t…and the token is invalid as of " + timestamp);
+          System.out.println("\t… the token is invalid as of " + timestamp);
         });
       }
     } catch (final ExecutionException | InterruptedException e) {
