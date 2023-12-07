@@ -96,7 +96,9 @@ public class PTTService {
 
   public void sendNotification(int id, String channelUuid, MultipartFile file) {
     String fileName = file.getOriginalFilename();
+    NotificationPayload payload = new NotificationPayload();
     Path dirPath = Paths.get("upload");
+     Path filePath;
     try {
       byte[] bytes = file.getBytes();
       
@@ -105,8 +107,12 @@ public class PTTService {
       if(!Files.exists(dirPath)) {
         Files.createDirectories(dirPath);
       }
-      System.out.println("dirctory:"+dirPath.toAbsolutePath()+" file:"+fileName);
-      Files.write(dirPath.toAbsolutePath(), bytes);
+
+       filePath = dirPath.resolve(fileName);
+       payload.setAudioUrl("/mobileapp/ptt/get-audio/"+fileName);
+
+      System.out.println("dirctory:"+filePath+" file:"+fileName);
+      Files.write(filePath, bytes);
     } catch (IOException e) {
       log.error(e.getMessage());
     }
@@ -115,8 +121,6 @@ public class PTTService {
 
     Channel channel = channelRepository.findByUuid(channelUuid);
 
-    NotificationPayload payload = new NotificationPayload();
-    payload.setAudioUrl(dirPath.toAbsolutePath()+"/"+fileName);
     payload.setUserName(byId.get().getName());
 
     ApnsClient service = getApns();
