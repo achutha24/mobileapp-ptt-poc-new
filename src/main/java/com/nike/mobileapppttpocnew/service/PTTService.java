@@ -80,6 +80,7 @@ public class PTTService {
       ChannelUsers channelUsers = new ChannelUsers();
       List<Integer> userId = userChannelRepository.findBychannelId(channel.getUuid());
       List<User> userList = userRepository.findAllByIdIn(userId);
+
       channelUsers.setChannel(channel);
       channelUsers.setUsers(userList);
       channelUsersList.add(channelUsers);
@@ -136,6 +137,7 @@ public class PTTService {
         System.out.println(userChannel.getUsedId());
       SimpleApnsPushNotification pushNotification = new SimpleApnsPushNotification(TokenUtil.sanitizeTokenString(userChannel.getPttToken()),
           "com.nike.pushToTalk.voip-ptt", notifPayload, Instant.now(), DeliveryPriority.IMMEDIATE, PushType.PUSH_TO_TALK);
+          System.out.println(pushNotification.toString());
       service.sendNotification(pushNotification);
       }
     }
@@ -223,7 +225,7 @@ public class PTTService {
     ApnsClient apnsClient;
     try {
        apnsClient = new ApnsClientBuilder()
-          .setApnsServer(ApnsClientBuilder.DEVELOPMENT_APNS_HOST)
+          .setApnsServer(ApnsClientBuilder.DEVELOPMENT_APNS_HOST, ApnsClientBuilder.ALTERNATE_APNS_PORT)
           .setClientCredentials(new File("src/main/resources/AthleteCommunication-Dev.p12"), "Nike1234!")
           .build();
     } catch (IOException e) {
