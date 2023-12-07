@@ -133,6 +133,7 @@ public class PTTService {
     List<UserChannel> allByChannelId = userChannelRepository.findAllByChannelId(channelUuid);
 
     for (UserChannel userChannel : allByChannelId) {
+      System.out.println(userChannel.getUsedId());
       if(userChannel.getUsedId() != byId.get().getId()) {
       SimpleApnsPushNotification pushNotification = new SimpleApnsPushNotification(TokenUtil.sanitizeTokenString(userChannel.getPttToken()),
           "com.nike.pushToTalk.voip-ptt", notifPayload, Instant.now(), DeliveryPriority.IMMEDIATE, PushType.PUSH_TO_TALK);

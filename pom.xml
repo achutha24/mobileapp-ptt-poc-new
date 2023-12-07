@@ -66,8 +66,7 @@
     <dependency>
     <groupId>io.netty</groupId>
     <artifactId>netty-tcnative-boringssl-static</artifactId>
-    <version>2.0.54.Final</version>
-    <scope>runtime</scope>
+    <version>2.0.61.Final</version>
 </dependency>
 <dependency>
     <groupId>com.eatthepath</groupId>
