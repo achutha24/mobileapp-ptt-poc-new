@@ -80,6 +80,16 @@ public class PTTService {
       ChannelUsers channelUsers = new ChannelUsers();
       List<Integer> userId = userChannelRepository.findBychannelId(channel.getUuid());
       List<User> userList = userRepository.findAllByIdIn(userId);
+      List<UserChannel> cUserChannels = userChannelRepository.findAllByChannelId(channel.getUuid());
+
+      for(UserChannel uChannel : cUserChannels) {
+        for(User user : userList) {
+          if(user.getId() == uChannel.getUserId()) {
+            user.setPttToken(uChannel.getPttToken());
+            userRepository.save(user);
+          }
+        }
+      }
 
       channelUsers.setChannel(channel);
       channelUsers.setUsers(userList);
@@ -133,8 +143,8 @@ public class PTTService {
     payloadBuilder.setAlertBody(payload.toString());
 
     final String notifPayload = payloadBuilder.build();
-      if(userChannel.getUsedId() != byId.get().getId()) {
-        System.out.println(userChannel.getUsedId());
+      if(userChannel.getUserId() != byId.get().getId()) {
+        System.out.println(userChannel.getUserId());
       SimpleApnsPushNotification pushNotification = new SimpleApnsPushNotification(TokenUtil.sanitizeTokenString(userChannel.getPttToken()),
           "com.nike.pushToTalk.voip-ptt", notifPayload, Instant.now(), DeliveryPriority.IMMEDIATE, PushType.PUSH_TO_TALK);
           System.out.println(pushNotification.toString());

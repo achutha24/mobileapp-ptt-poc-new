@@ -1,6 +1,8 @@
 package com.nike.mobileapppttpocnew.model;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +27,9 @@ public class User {
 
   @Column(name = "devicetoken")
   private String deviceToken;
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private String pttToken;
 
 
 }

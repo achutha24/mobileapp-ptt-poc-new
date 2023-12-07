@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserChannelRepository extends JpaRepository<UserChannel, Integer> {
 
-  @Query("select usedId FROM UserChannel where channelId=?1")
+  @Query("select userId FROM UserChannel where channelId=?1")
   public List<Integer> findBychannelId(String channelId);
 
   public List<UserChannel> findAllByChannelId(String channelId);

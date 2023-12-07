@@ -9,9 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-  @Query("select u.deviceToken from User u INNER JOIN UserChannel c on u.id=c.usedId where u.id!=?1 and c.channelId = ?2")
+  @Query("select u.deviceToken from User u INNER JOIN UserChannel c on u.id=c.userId where u.id!=?1 and c.channelId = ?2")
   public List<String> findDeviceTokenByUserId(int userId, String channelId);
-
 
   public List<User>  findAllByIdIn(List<Integer> userId);
 

@@ -11,7 +11,7 @@ import lombok.Setter;
 public class UserChannel {
 
   @Id
-  private int usedId;
+  private int userId;
 
   private String channelId;
 
