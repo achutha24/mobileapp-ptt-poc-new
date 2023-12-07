@@ -123,17 +123,15 @@ public class PTTService {
 
     payload.setUserName(byId.get().getName());
 
-    ApnsClient service = getApns();
+    List<UserChannel> allByChannelId = userChannelRepository.findAllByChannelId(channelUuid);
+
+    for (UserChannel userChannel : allByChannelId) {
+      ApnsClient service = getApns();
 
     final ApnsPayloadBuilder payloadBuilder = new SimpleApnsPayloadBuilder();
     payloadBuilder.setAlertBody(payload.toString());
 
     final String notifPayload = payloadBuilder.build();
-
-    List<UserChannel> allByChannelId = userChannelRepository.findAllByChannelId(channelUuid);
-
-    for (UserChannel userChannel : allByChannelId) {
-      System.out.println(userChannel.getUsedId());
       if(userChannel.getUsedId() != byId.get().getId()) {
         System.out.println(userChannel.getUsedId());
       SimpleApnsPushNotification pushNotification = new SimpleApnsPushNotification(TokenUtil.sanitizeTokenString(userChannel.getPttToken()),
