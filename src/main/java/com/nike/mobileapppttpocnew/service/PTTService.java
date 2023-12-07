@@ -98,8 +98,14 @@ public class PTTService {
     String fileName = file.getOriginalFilename();
     try {
       byte[] bytes = file.getBytes();
-      Path path = Paths.get(UPLOAD_DIR + "/" + fileName);
-      Files.write(path, bytes);
+      
+      Path dirPath = Paths.get("upload");
+      
+      if(!Files.exists(dirPath)) {
+        Files.createDirectories(dirPath);
+      }
+
+      Files.write(dirPath.toAbsolutePath(), bytes);
     } catch (IOException e) {
       log.error(e.getMessage());
     }
@@ -110,8 +116,6 @@ public class PTTService {
 
     NotificationPayload payload = new NotificationPayload();
     payload.setAudioUrl(UPLOAD_DIR+"/"+fileName);
-    payload.setChannelName(channel.getChannelName());
-    payload.setChannelUuid(channelUuid);
     payload.setUserName(byId.get().getName());
 
     ApnsClient service = getApns();
@@ -124,9 +128,11 @@ public class PTTService {
     List<UserChannel> allByChannelId = userChannelRepository.findAllByChannelId(channelUuid);
 
     for (UserChannel userChannel : allByChannelId) {
+      if(userChannel.getUsedId() != byId.get().getId()) {
       SimpleApnsPushNotification pushNotification = new SimpleApnsPushNotification(TokenUtil.sanitizeTokenString(userChannel.getPttToken()),
           "com.nike.pushToTalk.voip-ptt", notifPayload, Instant.now(), DeliveryPriority.IMMEDIATE, PushType.PUSH_TO_TALK);
       service.sendNotification(pushNotification);
+      }
     }
 
   }
